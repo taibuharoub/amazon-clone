@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 import {
   MenuIcon,
   SearchIcon,
@@ -6,6 +7,8 @@ import {
 } from "@heroicons/react/outline";
 
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useSelector } from "react-redux";
+import { selectItems } from "../store/basketSlice";
 
 function Header() {
   // useSession gives us 2 things the data and status
@@ -13,7 +16,12 @@ function Header() {
   // a user, image and name
   const { data: session, status } = useSession();
   // console.log(session);
-  console.log(status);
+  const router = useRouter();
+  // console.log(status);
+
+  // const items = useSelector((state) => state.basket.items);
+  const items = useSelector(selectItems);
+  // console.log(items);
   return (
     <header>
       {/* Top nav  */}
@@ -21,6 +29,7 @@ function Header() {
         {/* logo */}
         <div className="mt-2 flex items-center flex-grow sm:flex-grow-0">
           <Image
+            onClick={() => router.push("/")}
             src="https://links.papareact.com/f90"
             width={150}
             height={40}
@@ -54,12 +63,15 @@ function Header() {
             <p className="font-extrabold md:text-sm">& Orders</p>
           </div>
 
-          <div className="relative link flex items-center">
+          <div
+            onClick={() => router.push("/checkout")}
+            className="relative link flex items-center"
+          >
             <span
               className="absolute top-0 right-0 md:right-10 h-4 w-4 bg-yellow-400 
             text-center rounded-full text-black font-bold"
             >
-              0
+              {items.length}
             </span>
             <ShoppingCartIcon className="h-10" />
             <p className="hidden md:inline font-extrabold md:text-sm mt-2">
