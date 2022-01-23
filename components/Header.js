@@ -5,7 +5,15 @@ import {
   ShoppingCartIcon,
 } from "@heroicons/react/outline";
 
+import { signIn, signOut, useSession } from "next-auth/react";
+
 function Header() {
+  // useSession gives us 2 things the data and status
+  // session will have a expires property and a user object with
+  // a user, image and name
+  const { data: session, status } = useSession();
+  // console.log(session);
+  console.log(status);
   return (
     <header>
       {/* Top nav  */}
@@ -36,8 +44,8 @@ function Header() {
 
         {/* Right  */}
         <div className="text-white flex items-center text-xs space-x-6 mx-6 whitespace-nowrap">
-          <div className="link">
-            <p>Hello Taibu Haroub</p>
+          <div onClick={!session ? signIn : signOut} className="link">
+            <p>{session ? `Hello, ${session.user.name}` : "Sign In"}</p>
             <p className="font-extrabold md:text-sm">Account & Lists</p>
           </div>
 
