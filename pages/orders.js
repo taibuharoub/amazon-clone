@@ -6,7 +6,7 @@ import db from "../firebase";
 
 function Orders({ orders }) {
   const { data: session } = useSession();
-  console.log(orders);
+  // console.log(orders);
   return (
     <div>
       <Header />
@@ -16,15 +16,28 @@ function Orders({ orders }) {
         </h1>
 
         {session ? (
-          <h2>x Orders</h2>
+          <h2>{orders.length} Orders</h2>
         ) : (
           <h2>Please sign in to see your orders</h2>
         )}
 
         <div className="mt-5 space-y-4">
-          {orders?.map((order) => (
+          {/* {orders?.map((order) => (
             <Order key={order.id} />
-          ))}
+          ))} */}
+          {orders?.map(
+            ({ id, amount, amountShipping, images, timestamp, items }) => (
+              <Order
+                key={id}
+                id={id}
+                amount={amount}
+                amountShipping={amountShipping}
+                images={images}
+                timestamp={timestamp}
+                items={items}
+              />
+            )
+          )}
         </div>
       </main>
     </div>
@@ -54,7 +67,7 @@ export async function getServerSideProps(context) {
     .orderBy("timestamp", "desc")
     .get();
 
-  console.log(stripeOrders);
+  // console.log(stripeOrders);
 
   // Stripe Orders, go thru every single firebase document and get the
   // coressponding stripe info, go into the collection of users, go into the
@@ -90,6 +103,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       orders,
+      session,
     },
   };
 }
